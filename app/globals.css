@@ -48,6 +48,12 @@ h1, h2, h3 {
   color: #57564F;
 }
 
+/* Unifies collection photography sourced from different photographers/
+   settings into one consistent, slightly desaturated premium look. */
+.img-grade {
+  filter: saturate(0.92) contrast(1.05) brightness(0.99);
+}
+
 /* Signature element: a short precision rule — a quiet nod to a shoemaker's
    measuring line, used under eyebrows/headings instead of decoration. */
 .rule-mark {

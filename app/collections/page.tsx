@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { categoryMeta } from "@/lib/products";
+import { collectionImages } from "@/lib/collection-images";
 
 export const metadata: Metadata = {
   title: "Collections",
@@ -25,6 +26,7 @@ export default function CollectionsPage() {
         <div className="mt-14 grid sm:grid-cols-2 gap-6">
           {order.map((slug, i) => {
             const meta = categoryMeta[slug];
+            const image = collectionImages[slug];
             return (
               <Link
                 key={slug}
@@ -32,11 +34,11 @@ export default function CollectionsPage() {
                 className="group relative block h-80 overflow-hidden bg-canvas transition-shadow duration-300 ease-out hover:shadow-raised"
               >
                 <Image
-                  src={`https://picsum.photos/seed/collection-${slug}/1000/900`}
-                  alt={meta.title}
+                  src={image.src}
+                  alt={image.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  className="img-grade object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
                 <div className="absolute bottom-0 p-8">
