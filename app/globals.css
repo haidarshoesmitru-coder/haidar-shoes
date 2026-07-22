@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: #141412;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4E2DB;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8B8A82;
+}
+
+::selection {
+  background: #141412;
+  color: #ffffff;
+}
+
+.text-eyebrow {
+  font-family: var(--font-inter);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #57564F;
+}
+
+/* Signature element: a short precision rule — a quiet nod to a shoemaker's
+   measuring line, used under eyebrows/headings instead of decoration. */
+.rule-mark {
+  display: block;
+  height: 2px;
+  width: 32px;
+  background: #141412;
+}
+.rule-mark.rule-accent {
+  background: #B5502E;
+}
+
+.container-lux {
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .container-lux {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* Primary CTA — solid ink fill, no shine sweep, just a restrained lift */
+.btn-primary {
+  background-color: #141412;
+  color: #ffffff;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+.btn-primary:hover {
+  background-color: #33322E;
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Secondary CTA — outline, inverts on hover */
+.btn-secondary {
+  background-color: transparent;
+  color: #141412;
+  border: 1px solid #141412;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.btn-secondary:hover {
+  background-color: #141412;
+  color: #ffffff;
+}
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Simple animated underline for text links */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* focus visibility for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #141412;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
