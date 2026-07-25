@@ -86,7 +86,7 @@ export default function Navbar() {
 
         <div className="hidden lg:flex items-center gap-4">
           <a
-            href={whatsappLink("Hi Haidar Shoes, I'd like to know more about your collection.")}
+            href={whatsappLink()}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary text-eyebrow !text-[0.7rem] !text-white px-5 py-2.5"
@@ -143,7 +143,7 @@ export default function Navbar() {
                 );
               })}
               <a
-                href={whatsappLink("Hi Haidar Shoes, I'd like to know more about your collection.")}
+                href={whatsappLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary text-eyebrow !text-[0.7rem] !text-white px-5 py-3.5 text-center mt-4"

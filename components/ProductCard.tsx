@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Product } from "@/lib/types";
 import { EASE, fadeUp, viewportOnce, staggerDelay } from "@/lib/motion";
+import StockBadge from "./StockBadge";
 
 const tagLabel: Record<string, string> = {
   new: "New",
@@ -61,6 +62,11 @@ function ProductCard({ product, index = 0 }: { product: Product; index?: number 
               {product.name}
             </h3>
             <p className="text-xs text-stone mt-0.5">Art. {product.article}</p>
+            {product.stockStatus !== "in-stock" && (
+              <div className="mt-1">
+                <StockBadge status={product.stockStatus} />
+              </div>
+            )}
           </div>
           <div className="text-right shrink-0">
             <p className="text-ink font-semibold whitespace-nowrap">

@@ -8,8 +8,8 @@ export const siteConfig = {
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=X35C%2B5CG+Dokota+Road+Mitro+Punjab+Pakistan",
   },
   contact: {
-    whatsapp: "923001234567", // replace with real WhatsApp business number
-    phone: "+92 300 1234567",
+    whatsapp: "923142965191",
+    phone: "+92 314 2965191",
   },
   hours: [
     { day: "Monday – Saturday", time: "10:00 AM – 10:00 PM" },
@@ -22,7 +22,10 @@ export const siteConfig = {
   },
 };
 
-export function whatsappLink(message: string) {
+/** Standard prefill used across every WhatsApp button on the site. */
+export const DEFAULT_WHATSAPP_MESSAGE = "Hello Haidar Shoes!\nI'm interested in this product.";
+
+export function whatsappLink(message: string = DEFAULT_WHATSAPP_MESSAGE) {
   const encoded = encodeURIComponent(message);
   return `https://wa.me/${siteConfig.contact.whatsapp}?text=${encoded}`;
 }

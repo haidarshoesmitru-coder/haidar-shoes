@@ -5,15 +5,16 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { Product } from "@/lib/types";
-import { whatsappLink } from "@/lib/site-config";
+import { DEFAULT_WHATSAPP_MESSAGE, whatsappLink } from "@/lib/site-config";
 import { EASE } from "@/lib/motion";
+import StockBadge from "./StockBadge";
 
 export default function ProductDetail({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [size, setSize] = useState(product.sizes[Math.floor(product.sizes.length / 2)]);
   const [color, setColor] = useState(product.colors[0]);
 
-  const orderMessage = `Hi Haidar Shoes, I'd like to order:\n\n${product.name} (Art. ${product.article})\nSize: ${size}\nColor: ${color}\nPrice: Rs. ${product.price.toLocaleString()}`;
+  const orderMessage = `${DEFAULT_WHATSAPP_MESSAGE}\n\n${product.name} (Art. ${product.article})\nSize: ${size}\nColor: ${color}\nPrice: Rs. ${product.price.toLocaleString()}`;
 
   return (
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
@@ -67,7 +68,7 @@ export default function ProductDetail({ product }: { product: Product }) {
         <p className="text-eyebrow mb-3">Art. {product.article}</p>
         <h1 className="font-display font-bold text-3xl md:text-4xl text-ink">{product.name}</h1>
 
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-4 flex items-center gap-3 flex-wrap">
           <span className="text-2xl text-ink font-semibold">
             Rs. {product.price.toLocaleString()}
           </span>
@@ -76,6 +77,7 @@ export default function ProductDetail({ product }: { product: Product }) {
               Rs. {product.compareAtPrice.toLocaleString()}
             </span>
           )}
+          <StockBadge status={product.stockStatus} />
         </div>
 
         <p className="mt-6 text-graphite leading-relaxed">{product.description}</p>
@@ -122,24 +124,54 @@ export default function ProductDetail({ product }: { product: Product }) {
           </div>
         </div>
 
-        <a
-          href={whatsappLink(orderMessage)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary mt-10 flex items-center justify-center gap-2 !text-white text-eyebrow px-8 py-4 w-full sm:w-auto"
-        >
-          <MessageCircle size={18} aria-hidden="true" /> Order on WhatsApp
-        </a>
+        {product.stockStatus === "out-of-stock" ? (
+          <p className="mt-10 text-sm text-stone border border-line px-6 py-4 w-full sm:w-auto">
+            This item is currently out of stock. Message us on WhatsApp and we’ll let you know as soon as it’s back.
+          </p>
+        ) : (
+          <a
+            href={whatsappLink(orderMessage)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary mt-10 flex items-center justify-center gap-2 !text-white text-eyebrow px-8 py-4 w-full sm:w-auto"
+          >
+            <MessageCircle size={18} aria-hidden="true" /> Order on WhatsApp
+          </a>
+        )}
 
         <div className="mt-10">
-          <p className="text-eyebrow mb-3">Details</p>
+          <p className="text-eyebrow mb-3">Specifications</p>
           <ul className="space-y-2">
+            <li className="text-sm text-graphite flex gap-2">
+              <span className="text-ink">—</span> Brand: {product.brand}
+            </li>
+            <li className="text-sm text-graphite flex gap-2">
+              <span className="text-ink">—</span> Article Number: {product.article}
+            </li>
             {product.details.map((d) => (
               <li key={d} className="text-sm text-graphite flex gap-2">
                 <span className="text-ink">—</span> {d}
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="mt-10 grid sm:grid-cols-2 gap-6">
+          <div>
+            <p className="text-eyebrow mb-3">Delivery Information</p>
+            <p className="text-sm text-graphite leading-relaxed">
+              Delivered within 3–5 business days across Pakistan. Cash on
+              Delivery available nationwide; pay when your order arrives.
+            </p>
+          </div>
+          <div>
+            <p className="text-eyebrow mb-3">Exchange Policy</p>
+            <p className="text-sm text-graphite leading-relaxed">
+              Easy 7-day exchange on unworn pairs in original packaging.
+              Message us on WhatsApp with your order details to start an
+              exchange.
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>

@@ -27,12 +27,14 @@ Open http://localhost:3000
 
 ## Before Going Live
 
-1. **WhatsApp number** — set the real business number in `lib/site-config.ts`
-   (`contact.whatsapp`, digits only, country code first, e.g. `923001234567`).
-2. **Product photography** — every product currently uses placeholder imagery
-   from `picsum.photos` (seeded, so images stay consistent). Replace the
-   `images` arrays in `lib/products.ts` with real photos, or wire it up to a
-   CMS / database (see "Scaling Up" below).
+1. **WhatsApp number** — currently set to the real business number
+   (`+92 314 2965191`) in `lib/site-config.ts` (`contact.whatsapp`). Update
+   this if the number ever changes.
+2. **Product photography** — every product currently uses real footwear
+   photography sourced from Unsplash (see `lib/products.ts` and
+   `lib/collection-images.ts`), standing in for actual Haidar Shoes product
+   shoots. Replace the `images` arrays with real photography, or wire it up
+   to a CMS / database (see "Scaling Up" below), once available.
 3. **Address & map** — `lib/site-config.ts` holds the store address and the
    Google Maps link/embed. Update if the pin needs adjusting.
 4. **Metadata** — update `metadataBase` in `app/layout.tsx` and the URLs in

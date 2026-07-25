@@ -31,7 +31,7 @@ export default function StoreLocation() {
             <MapPin size={16} aria-hidden="true" /> Google Maps
           </a>
           <a
-            href={whatsappLink("Hi Haidar Shoes, I'd like to visit the store.")}
+            href={whatsappLink()}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary text-eyebrow px-6 py-3.5 text-center flex items-center justify-center gap-2"

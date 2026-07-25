@@ -48,7 +48,7 @@ export default function ContactPage() {
         </div>
 
         <a
-          href={whatsappLink("Hi Haidar Shoes, I have a question.")}
+          href={whatsappLink()}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary mt-8 flex sm:inline-flex items-center justify-center gap-2 !text-white text-eyebrow px-8 py-4 w-full sm:w-auto"

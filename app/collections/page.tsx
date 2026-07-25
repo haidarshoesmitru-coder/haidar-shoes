@@ -22,8 +22,13 @@ export default function CollectionsPage() {
         <h1 className="font-display font-bold text-4xl md:text-6xl text-ink max-w-2xl tracking-tight">
           The Full Haidar Shoes Collection
         </h1>
+        <p className="mt-5 text-graphite max-w-lg text-lg">
+          Genuine leather, honest construction, and a fit for every member of
+          the family — shop men’s, ladies’, kids’, winter and sandal
+          collections in one place.
+        </p>
 
-        <div className="mt-14 grid sm:grid-cols-2 gap-6">
+        <div className="mt-16 grid sm:grid-cols-2 gap-6">
           {order.map((slug, i) => {
             const meta = categoryMeta[slug];
             const image = collectionImages[slug];

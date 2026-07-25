@@ -57,7 +57,7 @@ export default function Hero() {
               Explore Collection
             </MotionLink>
             <motion.a
-              href={whatsappLink("Hi Haidar Shoes, I'd like to place an order.")}
+              href={whatsappLink()}
               target="_blank"
               rel="noopener noreferrer"
               whileTap={{ scale: 0.98 }}
