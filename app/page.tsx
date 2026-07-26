@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import CollectionsGrid from "@/components/CollectionsGrid";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Reviews from "@/components/Reviews";
+import PremiumCta from "@/components/PremiumCta";
 import StoreLocation from "@/components/StoreLocation";
 import { products } from "@/lib/products";
 import Link from "next/link";
@@ -78,6 +79,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Premium CTA */}
+      <PremiumCta />
 
       {/* Store Location */}
       <section className="py-16 md:py-24 bg-canvas border-t border-line">

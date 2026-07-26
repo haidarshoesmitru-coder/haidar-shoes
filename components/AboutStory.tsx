@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { EASE, viewportOnce } from "@/lib/motion";
+import { aboutImage } from "@/lib/collection-images";
 
 export default function AboutStory() {
   return (
@@ -15,11 +16,11 @@ export default function AboutStory() {
         className="relative aspect-[4/5] overflow-hidden bg-canvas shadow-card"
       >
         <Image
-          src="https://picsum.photos/seed/haidar-about/1000/1200"
-          alt="Inside the Haidar Shoes store"
+          src={aboutImage.src}
+          alt={aboutImage.alt}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover"
+          className="img-grade object-cover"
         />
       </motion.div>
       <motion.div

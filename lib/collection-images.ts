@@ -48,3 +48,27 @@ export const collectionImages: Record<string, CollectionImage> = {
     credit: "Photo by Stephanie Hau on Unsplash",
   },
 };
+
+/** Full-bleed hero image — a warmly-lit editorial shot of leather wingtip
+ * Oxfords, chosen for luxury lighting and modern composition. */
+export const heroImage: CollectionImage = {
+  src: `https://images.unsplash.com/photo-1777987601431-8d27d2039cc4?${params}&w=1600`,
+  alt: "Premium brown leather wingtip Oxford shoes",
+  credit: "Photo by Husien Bisky on Unsplash",
+};
+
+/** About page storefront/craftsmanship image — soft leather loafer shot,
+ * chosen to support the "genuine materials, honest craftsmanship" copy. */
+export const aboutImage: CollectionImage = {
+  src: `https://images.unsplash.com/photo-1616406432452-07bc5938759d?${params}&w=1000`,
+  alt: "Handcrafted leather footwear at Haidar Shoes",
+  credit: "Photo by Noah Smith on Unsplash",
+};
+
+/** Homepage closing CTA banner image — black leather dress shoes, dark and
+ * moody to support white overlay text. */
+export const ctaBannerImage: CollectionImage = {
+  src: `https://images.unsplash.com/photo-1777987601426-c05a82045862?${params}&w=1600`,
+  alt: "Premium black leather dress shoes",
+  credit: "Photo by Husien Bisky on Unsplash",
+};

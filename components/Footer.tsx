@@ -10,7 +10,8 @@ export default function Footer() {
           <span className="font-display font-extrabold text-xl tracking-tight text-ink uppercase">
             Haidar <span className="text-clay">Shoes</span>
           </span>
-          <p className="mt-4 max-w-sm text-sm text-graphite leading-relaxed">
+          <p className="mt-2 text-sm font-medium text-graphite">{siteConfig.tagline}</p>
+          <p className="mt-3 max-w-sm text-sm text-graphite leading-relaxed">
             {siteConfig.description}
           </p>
           <div className="mt-6 flex items-center gap-3">

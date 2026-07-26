@@ -40,7 +40,7 @@ export default function TwitterImage() {
             display: "flex",
           }}
         >
-          Step Into Style &amp; Comfort
+          Crafted For Every Step.
         </div>
         <div
           style={{

@@ -23,8 +23,11 @@ function ProductCard({ product, index = 0 }: { product: Product; index?: number 
       viewport={viewportOnce}
       transition={{ duration: 0.5, delay: staggerDelay(index, 0.06), ease: EASE }}
     >
-      <Link href={`/product/${product.slug}`} className="group block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-canvas">
+      <Link
+        href={`/product/${product.slug}`}
+        className="group block transition-transform duration-300 ease-out hover:-translate-y-1"
+      >
+        <div className="relative aspect-[4/5] overflow-hidden bg-canvas shadow-none transition-shadow duration-300 ease-out group-hover:shadow-raised">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -56,24 +59,24 @@ function ProductCard({ product, index = 0 }: { product: Product; index?: number 
           </div>
         </div>
 
-        <div className="pt-3.5 flex items-start justify-between gap-3">
+        <div className="pt-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-display font-semibold text-[15px] text-ink truncate">
+            <h3 className="font-display font-semibold text-[15px] text-ink truncate group-hover:text-clay transition-colors duration-200">
               {product.name}
             </h3>
-            <p className="text-xs text-stone mt-0.5">Art. {product.article}</p>
+            <p className="text-xs text-stone mt-1 tracking-wide">Art. {product.article}</p>
             {product.stockStatus !== "in-stock" && (
-              <div className="mt-1">
+              <div className="mt-1.5">
                 <StockBadge status={product.stockStatus} />
               </div>
             )}
           </div>
           <div className="text-right shrink-0">
-            <p className="text-ink font-semibold whitespace-nowrap">
+            <p className="text-base text-ink font-bold whitespace-nowrap">
               Rs. {product.price.toLocaleString()}
             </p>
             {product.compareAtPrice && (
-              <p className="text-xs text-stone line-through whitespace-nowrap">
+              <p className="text-xs text-stone line-through whitespace-nowrap mt-0.5">
                 Rs. {product.compareAtPrice.toLocaleString()}
               </p>
             )}

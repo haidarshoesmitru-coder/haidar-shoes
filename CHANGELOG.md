@@ -2,6 +2,87 @@
 
 All notable changes to this project are documented here.
 
+## [1.2.1] — Brand Identity & Premium UX Patch
+
+### Hero Section (Priority #1)
+- Removed the placeholder hero image (`picsum.photos` — a random-image
+  service that could render anything, including the mountains/rocks the
+  brief flagged) entirely.
+- Replaced it with a real, verified Unsplash photograph of leather wingtip
+  Oxfords in warm, dramatic lighting — footwear only, luxury lighting,
+  modern composition.
+- Rebuilt as a genuine full-screen hero (`h-[100svh]`) with a dark gradient
+  overlay for legible white typography, a strengthened headline, and
+  professional CTA buttons styled for the dark image background (solid
+  white primary, outlined white secondary).
+- Added subtle, restrained scroll parallax (no excessive movement).
+
+### Brand Identity (Priority #2)
+- Introduced a new premium tagline — **"Crafted For Every Step."** —
+  replacing the generic "Step Into Style & Comfort."
+- `siteConfig.tagline` is now the single source of truth; the Hero, the new
+  Premium CTA banner, the Footer, page metadata, and the OG/Twitter card
+  images all derive from it instead of hardcoding the old copy separately.
+- Footer now surfaces the tagline directly under the wordmark for
+  consistent brand voice.
+
+### Homepage Bug Fix (Priority #3)
+- Root-caused and fixed the broken/cropped image strip under "Winter
+  Collection 2026 & More": the feature tile had two conflicting Tailwind
+  classes (`md:col-span-1` *and* `md:col-span-2`) applied to the same
+  element at the same breakpoint — a genuine authoring bug, not a design
+  choice.
+- Rebuilt `CollectionsGrid` so each tile owns exactly one unambiguous class
+  per breakpoint. Also fixed the mobile grid math, which previously would
+  have left an orphaned tile with empty space next to it on small screens;
+  mobile now shows a clean, equal 2×2 grid, with the asymmetric "feature
+  tile" layout only appearing at `md` and above.
+
+### Footwear-First Imagery (Priority #4)
+- Audited every image on the site, not just collections/products as in the
+  prior release — found the About page was still using a random
+  `picsum.photos` placeholder and replaced it with real footwear
+  photography.
+- `picsum.photos` is now removed from the codebase entirely and from
+  `next.config.js`'s allowed image domains — every image site-wide is real,
+  verified footwear photography from Unsplash.
+
+### Homepage Improvements (Priority #5)
+- Added a new **Premium CTA** banner section (dark image, centered
+  headline, dual CTAs) between Reviews and Store Location — a closing
+  conversion moment that was missing before.
+- Left every existing homepage section (Featured Collection, New Arrivals,
+  Best Sellers, Why Choose Us, Reviews) in place rather than adding more —
+  the brief was explicit about not overcrowding the page.
+
+### Product Cards (Priority #6)
+- Added a soft shadow + whole-card lift on hover (previously image-only
+  zoom with no shadow).
+- Bolder, larger price typography; product name now tints to the brand
+  accent color on hover.
+- Slightly more breathing room between the image and the text block.
+
+### Product Page (Priority #7)
+- Added a soft shadow to the product gallery for more premium presentation.
+- Verified size selection, color selection, delivery information, exchange
+  policy, and related products were all already solid from v1.2.0 — no
+  regressions.
+
+### Mobile Experience (Priority #8)
+- Audited the codebase for common overflow patterns (fixed pixel widths,
+  negative margins, unresponsive oversized text) — found none beyond the
+  grid bug above, which is now fixed.
+- Added a defensive `overflow-x: hidden` on `<body>` as a safety net.
+
+### Performance (Priority #9)
+- Verified `priority` is set on exactly the two LCP-relevant images (Hero,
+  product gallery) and nowhere else.
+- Verified every `fill`-mode image across the site has an appropriate
+  `sizes` attribute (prevents over-fetching and layout shift).
+- `scroll-behavior: smooth` confirmed already in place globally.
+
+---
+
 ## [1.2.0] — Minor Update
 
 ### Product Catalog

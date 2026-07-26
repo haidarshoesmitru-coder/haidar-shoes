@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Haidar Shoes",
-  tagline: "Step Into Style & Comfort",
+  tagline: "Crafted For Every Step.",
   description:
     "Haidar Shoes is a premium footwear brand crafting stylish, comfortable shoes for men, women and kids — trusted across Punjab for quality and value.",
   address: {

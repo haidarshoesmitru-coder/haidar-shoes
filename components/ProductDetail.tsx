@@ -20,7 +20,7 @@ export default function ProductDetail({ product }: { product: Product }) {
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
       {/* Gallery */}
       <div>
-        <div className="relative aspect-[4/5] overflow-hidden bg-canvas">
+        <div className="relative aspect-[4/5] overflow-hidden bg-canvas shadow-card">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeImage}
