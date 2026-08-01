@@ -2,6 +2,60 @@
 
 All notable changes to this project are documented here.
 
+## [1.3.3] — Full Error Diagnostics + Schema Cache Fix (Patch)
+
+Follow-up to a report that `/admin/setup` still failed with "Could not check
+setup status" even after confirming schema.sql ran, all tables exist, and
+Vercel env vars were set and redeployed.
+
+### What was actually wrong in the code (confirmed)
+`getSetupStatus()` only captured `error.message` from the Supabase query and
+discarded `error.code`, `error.details`, and `error.hint` — the fields that
+actually distinguish "table doesn't exist" from "no permission" from
+"PostgREST's schema cache hasn't caught up yet" from each other. With only a
+generic message, there was no way to tell which of those was happening.
+
+### What was checked and ruled out
+- `lib/supabase/service.ts` — confirmed it reads `SUPABASE_SERVICE_ROLE_KEY`
+  (not the anon key) and the correct URL var. No mismatch found.
+- The query targets `public.admin_profiles` correctly — `.from("admin_profiles")`
+  defaults to the `public` schema in supabase-js; no schema-qualification bug.
+
+### Fixed
+- `getSetupStatus()`'s error variant now carries `code`, `message`, `details`,
+  and `hint` — the full Postgrest error object, not just one field.
+- `/admin/setup` now prints all four fields directly on the page when
+  something fails, so the exact cause is visible without needing server logs.
+- Added targeted guidance that triggers automatically based on the error
+  code: a `PGRST205` (or any "schema cache" message) shows a specific fix for
+  a real, well-documented Supabase gotcha — see below. A `42501`/`PGRST301`
+  shows permission-key guidance instead.
+
+### Leading hypothesis for your specific case
+Everything you verified (schema ran, tables exist, env vars correct,
+redeployed) is consistent with one specific, well-documented Supabase
+behavior: **PostgREST caches the database schema separately from Postgres
+itself.** Running SQL directly in the SQL Editor creates tables immediately,
+but the API layer that `supabase-js` actually talks to over HTTP doesn't
+always notice right away — queries against tables that genuinely exist fail
+with error code `PGRST205` ("Could not find the table ... in the schema
+cache") until the cache reloads. This matches every fact you reported.
+
+**Fix**: in the Supabase Dashboard, go to **Settings → API → click "Reload
+schema cache"** — or run the one-liner in the new
+`supabase/reload-schema-cache.sql`. No redeploy needed; this isn't a code or
+environment variable problem.
+
+- `supabase/schema.sql` now ends with `notify pgrst, 'reload schema';`, so
+  anyone running it fresh from now on won't hit this at all.
+- Added `supabase/reload-schema-cache.sql` — a standalone one-line fix for
+  anyone (like this specific case) who already ran schema.sql before this
+  version added that line.
+
+**If the error code you see is something other than `PGRST205`** — the page
+will now show exactly which one, and that code is the fastest path to the
+real cause from here.
+
 ## [1.3.2] — Setup Status Bug Fix (Patch)
 
 Real bug, reported by the store owner: `/admin/setup` said "an admin account

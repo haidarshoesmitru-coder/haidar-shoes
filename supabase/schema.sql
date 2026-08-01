@@ -314,3 +314,16 @@ insert into public.categories (name, slug, description, display_order) values
   ('Kids Collection', 'kids', 'Durable, comfortable footwear built for little feet on the move.', 4),
   ('Sandals & Slippers', 'sandals', 'Open, breathable comfort for warm days and easy evenings.', 5)
 on conflict (slug) do nothing;
+
+-- ============================================================================
+-- Reload PostgREST's schema cache
+--
+-- PostgREST (Supabase's REST API layer) caches the database schema
+-- separately from Postgres itself. Running DDL through the SQL Editor
+-- creates tables/columns immediately, but the API layer can take a minute
+-- to notice on its own — in the meantime, queries against tables that
+-- genuinely exist fail with "Could not find the table 'public.x' in the
+-- schema cache" (error code PGRST205). Running this explicitly avoids
+-- waiting on that automatic reload.
+-- ============================================================================
+notify pgrst, 'reload schema';

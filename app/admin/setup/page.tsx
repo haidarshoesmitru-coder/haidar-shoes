@@ -18,22 +18,59 @@ export default async function AdminSetupPage({
   }
 
   if (check.status === "error") {
+    const isSchemaCacheIssue = check.code === "PGRST205" || check.message.toLowerCase().includes("schema cache");
+    const isPermissionIssue = check.code === "42501" || check.code === "PGRST301";
+
     return (
       <DiagnosticScreen title="Could Not Check Setup Status" isError>
         <>
           Supabase returned an error while checking the{" "}
           <code className="bg-canvas px-1.5 py-0.5">admin_profiles</code> table:
         </>
-        <span className="block mt-3 font-mono text-xs bg-canvas border border-line px-3 py-2 text-clay">
-          {check.message}
-        </span>
-        <span className="block mt-4">
-          This usually means <code className="bg-canvas px-1.5 py-0.5">supabase/schema.sql</code> hasn’t
-          been run yet in your Supabase project’s SQL Editor, or your{" "}
-          <code className="bg-canvas px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> /{" "}
-          <code className="bg-canvas px-1.5 py-0.5">SUPABASE_SERVICE_ROLE_KEY</code> don’t match
-          your project. Fix that, restart the dev server, and reload this page.
-        </span>
+
+        <div className="mt-3 font-mono text-xs bg-canvas border border-line px-3 py-3 text-ink space-y-1">
+          <div><span className="text-stone">code:</span> {check.code}</div>
+          <div><span className="text-stone">message:</span> {check.message}</div>
+          <div><span className="text-stone">details:</span> {check.details || "(none)"}</div>
+          <div><span className="text-stone">hint:</span> {check.hint || "(none)"}</div>
+        </div>
+
+        {isSchemaCacheIssue && (
+          <div className="mt-4 border-l-2 border-clay pl-4">
+            <p className="font-medium text-ink">This is almost certainly it: PostgREST&rsquo;s schema cache is stale.</p>
+            <p className="mt-1">
+              Running SQL directly in the SQL Editor creates the tables in Postgres immediately, but
+              Supabase&rsquo;s API layer (PostgREST) caches the schema separately and doesn&rsquo;t always
+              notice right away. Fix: <strong>Supabase Dashboard → Settings → API → click &ldquo;Reload schema
+              cache&rdquo;</strong> (or run <code className="bg-canvas px-1.5 py-0.5">NOTIFY pgrst, &apos;reload schema&apos;;</code>{" "}
+              in the SQL Editor), wait about 10 seconds, then reload this page. No redeploy needed —
+              this isn&rsquo;t a code or env var problem.
+            </p>
+          </div>
+        )}
+
+        {isPermissionIssue && (
+          <div className="mt-4 border-l-2 border-clay pl-4">
+            <p className="font-medium text-ink">This looks like a permissions/key problem.</p>
+            <p className="mt-1">
+              Double-check that <code className="bg-canvas px-1.5 py-0.5">SUPABASE_SERVICE_ROLE_KEY</code> in
+              Vercel is the <strong>service_role</strong> key (starts with a JWT that decodes to{" "}
+              <code className="bg-canvas px-1.5 py-0.5">&quot;role&quot;:&quot;service_role&quot;</code>) and not
+              the anon key by mistake, and that it belongs to the same project as{" "}
+              <code className="bg-canvas px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code>.
+            </p>
+          </div>
+        )}
+
+        {!isSchemaCacheIssue && !isPermissionIssue && (
+          <p className="mt-4">
+            The <code className="bg-canvas px-1.5 py-0.5">code</code> above is the specific Postgres/PostgREST
+            error code — searching for it (e.g. &ldquo;PGRST100&rdquo;, &ldquo;42P01&rdquo;) usually points
+            straight at the cause. Common ones: <code className="bg-canvas px-1.5 py-0.5">42P01</code> = table
+            doesn&rsquo;t actually exist in this project, <code className="bg-canvas px-1.5 py-0.5">PGRST205</code> =
+            schema cache is stale (see above).
+          </p>
+        )}
       </DiagnosticScreen>
     );
   }

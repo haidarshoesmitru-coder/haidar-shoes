@@ -7,7 +7,7 @@ export type SetupStatus =
   | { status: "available" }
   | { status: "already-configured" }
   | { status: "not-configured" }
-  | { status: "error"; message: string };
+  | { status: "error"; code: string; message: string; details: string; hint: string };
 
 /**
  * Checks whether the setup flow should be open. Deliberately does NOT
@@ -27,7 +27,17 @@ export async function getSetupStatus(): Promise<SetupStatus> {
     .select("*", { count: "exact", head: true });
 
   if (error) {
-    return { status: "error", message: error.message };
+    // Surface the full Postgrest/Supabase error object rather than just
+    // `.message` — `.code` in particular (e.g. PGRST205, 42501, PGRST301)
+    // is what actually distinguishes "table doesn't exist," "no
+    // permission," and "PostgREST's schema cache is stale" from each other.
+    return {
+      status: "error",
+      code: error.code || "unknown",
+      message: error.message || "No message returned.",
+      details: error.details || "",
+      hint: error.hint || "",
+    };
   }
 
   return (count ?? 0) === 0 ? { status: "available" } : { status: "already-configured" };
