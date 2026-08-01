@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { login } from "@/lib/actions/auth";
-import { setupIsAvailable } from "@/lib/actions/setup";
+import { getSetupStatus } from "@/lib/actions/setup";
 
 const errorMessages: Record<string, string> = {
   "not-authorized": "That account doesn't have admin access.",
@@ -14,7 +14,7 @@ export default async function AdminLoginPage({
 }) {
   const rawError = searchParams.error;
   const message = rawError ? errorMessages[rawError] ?? rawError : null;
-  const needsSetup = await setupIsAvailable();
+  const needsSetup = (await getSetupStatus()).status === "available";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-canvas px-6">

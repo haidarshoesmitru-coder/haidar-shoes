@@ -2,6 +2,35 @@
 
 All notable changes to this project are documented here.
 
+## [1.3.2] — Setup Status Bug Fix (Patch)
+
+Real bug, reported by the store owner: `/admin/setup` said "an admin account
+already exists" on a fresh project where no admin had ever been created.
+
+### Root cause
+`setupIsAvailable()` treated *any* Supabase query error the same as "an
+admin already exists" (`if (error) return false`) — so if `schema.sql` hadn't
+been run yet, or the service role key/URL were mismatched, the resulting
+database error was silently swallowed and reported as the wrong thing
+entirely. No default/seed admin account was ever created — there was never
+one to find; the check itself was just misreporting failures.
+
+### Fixed
+- Replaced the boolean `setupIsAvailable()` with `getSetupStatus()`, which
+  returns one of four distinct states: `available`, `already-configured`,
+  `not-configured` (no service role key set), or `error` (with the actual
+  Postgres/Supabase error message attached).
+- `/admin/setup` now shows the *real* diagnostic — including the literal
+  error text from Supabase — instead of a misleading "already exists"
+  message, with guidance pointing at the most likely causes (schema not run
+  yet, or mismatched env vars).
+- The "already exists" screen now also tells you exactly where to verify
+  that for yourself (Supabase → Authentication → Users, and the
+  `admin_profiles` table in the Table Editor) and how to reopen setup if the
+  row shouldn't be there.
+- Login page's "Create one →" link now only appears when setup is genuinely
+  available, not silently on error.
+
 ## [1.3.1] — Admin Setup Wizard (Patch)
 
 v1.3.0 shipped an admin panel with no way to actually create the first admin
