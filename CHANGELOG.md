@@ -2,6 +2,93 @@
 
 All notable changes to this project are documented here.
 
+## [1.3.0] — Production Product Management System
+
+A major backend addition: a full, RLS-secured Admin Panel backed by
+Supabase, so real products can be added, edited, and managed without ever
+touching code again. No storefront redesign — the same UI now runs on a
+swappable data layer.
+
+### 1. Product Image Management
+- Drag & drop multi-image upload straight to Supabase Storage
+  (`components/admin/ImageUploader.tsx`)
+- Live preview grid, per-image delete, drag-to-reorder, and a "set as
+  featured" toggle (enforced as exactly one featured image per product via a
+  unique partial index in the schema)
+- Basic upload validation (JPG/PNG/WEBP only, 8MB max) — full server-side
+  image resizing wasn't feasible without a runtime this project can verify,
+  so display-side optimization continues to rely on next/image, same as the
+  rest of the site
+- Same drag & drop pattern reused for a single category image
+  (`components/admin/CategoryImageUploader.tsx`)
+
+### 2. Product Management
+- Add/Edit form covering every required field: name, article number (unique,
+  DB-enforced), SKU, category, brand, gender, season, price, sale price, cost
+  price (admin-only), stock quantity, low stock threshold, sizes, colors,
+  material, short/full description, and the Featured / New Arrival / Best
+  Seller / Active flags
+- Product list with a quick Active/Inactive toggle that doesn't require
+  opening the full edit form
+
+### 3. Category Management
+- Add, edit, delete, upload image, and set display order — the storefront's
+  Collections page now renders in admin-controlled order and prefers the
+  admin-uploaded image, falling back to the existing curated photography
+  until one is set
+
+### 4. Dashboard
+- Total products, active products, low stock, featured products, categories,
+  and a recent-products table — all live-queried from Supabase
+
+### 5. Search & Filter
+- Admin product list is searchable by name or article number, filterable by
+  category, stock level, featured, best seller, and active status — all
+  driven by URL search params, so filtered views are shareable/bookmarkable
+
+### 6. Settings
+- Store name, WhatsApp number, address, business hours, and social links,
+  editable from `/admin/settings`. **Known limitation:** the storefront's
+  displayed contact info still reads from `lib/site-config.ts` rather than
+  these saved settings — see the README's "Known Limitation" section for
+  why, and the specific next step to close that gap.
+
+### 7. Security
+- Every `/admin/*` route is protected by `middleware.ts`, which checks for a
+  valid Supabase session *and* membership in an `admin_profiles` table —
+  being logged in isn't enough on its own, you have to be an admin.
+- No public sign-up page exists for admin access; accounts are created
+  directly in the Supabase dashboard and explicitly granted access via SQL
+  (documented step-by-step in the README).
+- Every table has Row Level Security enabled — the public can only ever read
+  `is_active = true` rows; all writes require an authenticated admin.
+
+### 8. Database
+- `supabase/schema.sql` — the complete schema: `categories`, `products`,
+  `product_images`, `store_settings`, `admin_profiles`, all RLS policies, and
+  two storage buckets (`product-images`, `category-images`), written to be
+  safe to re-run.
+
+### Storefront data layer (the part that makes this actually useful)
+Building an admin panel that writes to a database nobody reads from would
+defeat the point, so this release also:
+- Added `lib/storefront-data.ts` — reads from Supabase when configured, maps
+  results into the *exact* shape the existing UI components already expect,
+  and transparently falls back to the static sample catalog if Supabase
+  isn't configured yet or a query fails. **Zero changes to any
+  customer-facing component or markup** — only the data source underneath
+  changed.
+- Restructured `app/` using a `(site)` route group so `/admin` doesn't
+  inherit the storefront's Navbar/Footer — this is a folder reorganization
+  only; every existing URL is unchanged.
+- Fixed `dynamicParams = false` on the category route, which would have
+  404'd any category created after the last build — categories and products
+  added via the admin panel now render on demand, no rebuild required.
+- Sitemap now reflects live Supabase data too.
+
+### Dependencies
+- Added `@supabase/supabase-js` and `@supabase/ssr`.
+
 ## [1.2.1] — Brand Identity & Premium UX Patch
 
 ### Hero Section (Priority #1)

@@ -6,10 +6,13 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import Reviews from "@/components/Reviews";
 import PremiumCta from "@/components/PremiumCta";
 import StoreLocation from "@/components/StoreLocation";
-import { products } from "@/lib/products";
+import { getAllProducts } from "@/lib/storefront-data";
 import Link from "next/link";
 
-export default function HomePage() {
+export const revalidate = 300; // 5 min — keeps admin edits showing up promptly without querying on every request
+
+export default async function HomePage() {
+  const products = await getAllProducts();
   const newArrivals = products.filter((p) => p.tags?.includes("new")).slice(0, 4);
   const bestSellers = products.filter((p) => p.tags?.includes("bestseller")).slice(0, 4);
 

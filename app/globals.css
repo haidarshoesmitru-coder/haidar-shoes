@@ -130,7 +130,19 @@ h1, h2, h3 {
   transform: scaleX(1);
 }
 
-/* focus visibility for accessibility */
+/* Shared form control styling for admin panel forms */
+.input {
+  width: 100%;
+  border: 1px solid #E4E2DB;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  color: #141412;
+}
+.input:focus {
+  outline: none;
+  border-color: #141412;
+}
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid #141412;

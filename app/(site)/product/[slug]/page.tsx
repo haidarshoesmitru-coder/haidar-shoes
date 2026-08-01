@@ -3,18 +3,21 @@ import { notFound } from "next/navigation";
 import ProductDetail from "@/components/ProductDetail";
 import ProductCard from "@/components/ProductCard";
 import SectionHeading from "@/components/SectionHeading";
-import { getProductBySlug, getRelatedProducts, products } from "@/lib/products";
+import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/storefront-data";
 
-export function generateStaticParams() {
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const products = await getAllProducts();
   return products.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const product = getProductBySlug(params.slug);
+}): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug);
   if (!product) return {};
   return {
     title: product.name,
@@ -30,11 +33,11 @@ export function generateMetadata({
   };
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const product = await getProductBySlug(params.slug);
   if (!product) notFound();
 
-  const related = getRelatedProducts(product);
+  const related = await getRelatedProducts(product);
 
   return (
     <div className="pt-28 pb-16 md:pt-32 md:pb-24">

@@ -2,18 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PackageSearch, MessageCircle } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { categoryMeta, getProductsByCategory } from "@/lib/products";
+import { getCategoryMeta, getProductsByCategory } from "@/lib/storefront-data";
 import { whatsappLink } from "@/lib/site-config";
 
-export function generateStaticParams() {
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const categoryMeta = await getCategoryMeta();
   return Object.keys(categoryMeta).map((category) => ({ category }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { category: string };
-}): Metadata {
+}): Promise<Metadata> {
+  const categoryMeta = await getCategoryMeta();
   const meta = categoryMeta[params.category];
   if (!meta) return {};
   return {
@@ -23,15 +27,16 @@ export function generateMetadata({
   };
 }
 
-export default function CategoryPage({
+export default async function CategoryPage({
   params,
 }: {
   params: { category: string };
 }) {
+  const categoryMeta = await getCategoryMeta();
   const meta = categoryMeta[params.category];
   if (!meta) notFound();
 
-  const items = getProductsByCategory(params.category);
+  const items = await getProductsByCategory(params.category);
 
   return (
     <div className="pt-28 pb-16 md:pt-32 md:pb-24">
@@ -73,5 +78,3 @@ export default function CategoryPage({
     </div>
   );
 }
-
-export const dynamicParams = false;

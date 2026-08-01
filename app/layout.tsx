@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import WhatsAppFloatButton from "@/components/WhatsAppFloatButton";
 import { siteConfig } from "@/lib/site-config";
 
 const archivo = Archivo({
@@ -73,12 +70,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${archivo.variable} ${inter.variable}`}>
-      <body className="font-body bg-paper text-ink antialiased">
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppFloatButton />
-      </body>
+      <body className="font-body bg-paper text-ink antialiased">{children}</body>
     </html>
   );
 }

@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
-import { products, categoryMeta } from "@/lib/products";
+import { getAllProducts, getCategoryMeta } from "@/lib/storefront-data";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://haidarshoes.com";
+  const [products, categoryMeta] = await Promise.all([getAllProducts(), getCategoryMeta()]);
 
   const staticRoutes = ["", "/collections", "/about", "/contact"].map((path) => ({
     url: `${base}${path}`,

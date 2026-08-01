@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { categoryMeta } from "@/lib/products";
+import { getCategoriesOrdered } from "@/lib/storefront-data";
 import { collectionImages } from "@/lib/collection-images";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Collections",
   description: "Browse the full Haidar Shoes collection — winter boots, men's, ladies', kids' shoes and sandals.",
 };
 
-const order = ["winter", "men", "ladies", "kids", "sandals"];
+export default async function CollectionsPage() {
+  const categories = await getCategoriesOrdered();
 
-export default function CollectionsPage() {
   return (
     <div className="pt-28 pb-16 md:pt-32 md:pb-24">
       <div className="container-lux">
@@ -29,18 +31,23 @@ export default function CollectionsPage() {
         </p>
 
         <div className="mt-16 grid sm:grid-cols-2 gap-6">
-          {order.map((slug, i) => {
-            const meta = categoryMeta[slug];
-            const image = collectionImages[slug];
+          {categories.map((cat, i) => {
+            // Prefer the admin-uploaded category image; fall back to the
+            // curated stock photography until the admin sets one.
+            const fallback = collectionImages[cat.slug];
+            const imageSrc = cat.imageUrl || fallback?.src;
+            const imageAlt = cat.imageUrl ? cat.title : fallback?.alt ?? cat.title;
+            if (!imageSrc) return null;
+
             return (
               <Link
-                key={slug}
-                href={`/collections/${slug}`}
+                key={cat.slug}
+                href={`/collections/${cat.slug}`}
                 className="group relative block h-80 overflow-hidden bg-canvas transition-shadow duration-300 ease-out hover:shadow-raised"
               >
                 <Image
-                  src={image.src}
-                  alt={image.alt}
+                  src={imageSrc}
+                  alt={imageAlt}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="img-grade object-cover transition-transform duration-500 ease-out group-hover:scale-105"
@@ -49,9 +56,9 @@ export default function CollectionsPage() {
                 <div className="absolute bottom-0 p-8">
                   <p className="text-eyebrow !text-white/70 mb-2">0{i + 1}</p>
                   <h2 className="font-display font-semibold text-2xl md:text-3xl text-white transition-colors">
-                    {meta.title}
+                    {cat.title}
                   </h2>
-                  <p className="text-sm text-white/70 mt-2 max-w-xs">{meta.description}</p>
+                  <p className="text-sm text-white/70 mt-2 max-w-xs">{cat.description}</p>
                 </div>
               </Link>
             );
