@@ -27,7 +27,9 @@ Go to [supabase.com](https://supabase.com), create a new project, and open
 **Project Settings → API** to find your Project URL and anon public key.
 
 ### 2. Configure environment variables
-Copy `.env.example` to `.env.local` and fill in your values:
+Copy `.env.example` to `.env.local` and fill in your values — including
+`SUPABASE_SERVICE_ROLE_KEY` (also on the API settings page), which is needed
+for step 4 below:
 
 ```bash
 cp .env.example .env.local
@@ -40,21 +42,25 @@ Security policy, and storage bucket the admin panel needs, and seeds the five
 categories that match the current storefront.
 
 ### 4. Create your admin account
-There is intentionally no public sign-up page for the admin panel. Instead:
+Restart the dev server (so it picks up `.env.local`), then visit
+**`/admin/setup`**. This page only works while no admin account exists yet —
+fill in your name, email, and a password, and it creates your account for
+you. Once it's done, the page turns itself off automatically (visiting it
+again just redirects to the login page), so there's no lingering way for
+anyone else to create an admin account through it.
 
-1. In the Supabase dashboard, go to **Authentication → Users → Add User**
-   and create yourself an account (email + password).
-2. Copy that user's UUID.
-3. In the **SQL Editor**, run:
-   ```sql
-   insert into admin_profiles (id, full_name) values ('<paste-uuid-here>', 'Your Name');
-   ```
+**Adding more admins later?** `/admin/setup` is one-time-only by design. To
+add a second admin, use the manual method instead: create the user in
+**Authentication → Users → Add User** in the Supabase dashboard, copy their
+UUID, then run in the **SQL Editor**:
+```sql
+insert into admin_profiles (id, full_name) values ('<paste-uuid-here>', 'Their Name');
+```
 
 ### 5. Log in
-Restart the dev server (so it picks up `.env.local`), then visit
-`/admin/login` and sign in. From here you can add products, categories, and
-update store settings — everything shows up on the live storefront within a
-few minutes (pages revalidate every 5 minutes, or instantly on the next
+Visit `/admin/login` and sign in. From here you can add products, categories,
+and update store settings — everything shows up on the live storefront within
+a few minutes (pages revalidate every 5 minutes, or instantly on the next
 visit after an edit for most changes).
 
 **Once Supabase is connected, the storefront automatically switches from the
@@ -90,11 +96,13 @@ lib/
   supabase/
     client.ts / server.ts       → Cookie-aware clients (browser / server actions)
     public.ts                    → Cookie-free client for public storefront reads
+    service.ts                    → Service-role client (RLS bypass) — used only
+                                    by /admin/setup, never anywhere else
     middleware.ts                 → Session refresh helper used by middleware.ts
     types.ts                      → Hand-written DB types (see note below)
     queries.ts                    → Admin-panel read queries
-  actions/                      → Server Actions (auth, products, categories,
-                                 images, settings) — all admin mutations
+  actions/                      → Server Actions (auth, setup, products,
+                                 categories, images, settings) — all admin mutations
   site-config.ts                → Brand contact info, address, WhatsApp helper
   motion.ts                     → Shared Framer Motion easing curve + variants
 supabase/schema.sql             → Full DB schema, RLS policies, storage buckets

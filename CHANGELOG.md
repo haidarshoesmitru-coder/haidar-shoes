@@ -2,6 +2,37 @@
 
 All notable changes to this project are documented here.
 
+## [1.3.1] — Admin Setup Wizard (Patch)
+
+v1.3.0 shipped an admin panel with no way to actually create the first admin
+account short of manually running SQL in the Supabase dashboard — a real gap
+for a non-technical store owner. This patch fixes that.
+
+### Added
+- **`/admin/setup`** — a self-service page for creating your first admin
+  account (name, email, password — no SQL required). It only works while no
+  admin account exists yet; once used, it permanently redirects to the login
+  page instead, so it can't be reused as a backdoor later.
+- The login page now detects when no admin exists yet and shows a "Create
+  one →" link to `/admin/setup`, so first-time visitors aren't stuck at a
+  login form with no way forward.
+- `lib/supabase/service.ts` — a service-role Supabase client, used
+  exclusively by the setup flow (bypasses RLS to create the very first
+  account, which is otherwise impossible under RLS since no admin exists yet
+  to authorize it). Never used anywhere else in the codebase.
+- If creating the `admin_profiles` row fails after the auth account was
+  already created, the action rolls back by deleting the auth user — so a
+  failed setup attempt doesn't leave an orphaned login with no admin access
+  and no way to retry.
+
+### Changed
+- `middleware.ts` now allows `/admin/setup` through without requiring a
+  session, matching how `/admin/login` was already handled.
+- `.env.example` and the README's setup instructions updated — creating your
+  first admin account is now the setup-wizard flow by default. The manual
+  SQL method from v1.3.0 is still documented, now specifically as how to add
+  a *second* admin later (the wizard is intentionally one-time-only).
+
 ## [1.3.0] — Production Product Management System
 
 A major backend addition: a full, RLS-secured Admin Panel backed by
